@@ -1,8 +1,8 @@
 package com.hackathon.agenda;
 
+import com.hackathon.agenda.models.Agenda;
 import com.hackathon.agenda.models.Contacto;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -11,11 +11,7 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
 
-        // Lista temporal mientras se integra la clase Agenda
-        ArrayList<Contacto> contactos = new ArrayList<>();
-
-        // Capacidad provisional
-        int capacidadMaxima = 10;
+        Agenda agenda = new Agenda(10);
 
         int tecladoOpcion;
 
@@ -35,7 +31,6 @@ public class Main {
             System.out.print("Selecciona una opción: ");
             tecladoOpcion = scanner.nextInt();
 
-            // Consume el Enter pendiente
             scanner.nextLine();
 
             switch (tecladoOpcion) {
@@ -44,39 +39,19 @@ public class Main {
                     System.out.println();
                     System.out.println("=== AÑADIR CONTACTO ===");
 
-                    if (contactos.size() >= capacidadMaxima) {
-                        System.out.println("La agenda está llena.");
-                        break;
-                    }
-
                     System.out.print("Ingresa el nombre del contacto: ");
                     String nombre = scanner.nextLine();
 
+                    System.out.print("Ingresa el apellido del contacto: ");
+                    String apellido = scanner.nextLine();
+
                     System.out.print("Ingresa el número del contacto: ");
-                    String numero = scanner.nextLine();
+                    String telefono = scanner.nextLine();
 
-                    Contacto nuevoContacto = new Contacto(nombre, numero);
+                    Contacto nuevoContacto =
+                            new Contacto(nombre, apellido, telefono);
 
-                    boolean contactoExiste = false;
-
-                    for (Contacto contacto : contactos) {
-
-                        if (contacto.equals(nuevoContacto)) {
-                            contactoExiste = true;
-                            break;
-                        }
-                    }
-
-                    if (contactoExiste) {
-
-                        System.out.println("El contacto ya existe.");
-
-                    } else {
-
-                        contactos.add(nuevoContacto);
-                        System.out.println("Contacto agregado correctamente.");
-                        System.out.println(nuevoContacto);
-                    }
+                    agenda.aniadirContacto(nuevoContacto);
 
                     break;
 
@@ -87,17 +62,13 @@ public class Main {
                     System.out.print("Ingresa el nombre del contacto: ");
                     String nombreComprobar = scanner.nextLine();
 
-                    boolean existe = false;
+                    System.out.print("Ingresa el apellido del contacto: ");
+                    String apellidoComprobar = scanner.nextLine();
 
-                    for (Contacto contacto : contactos) {
+                    Contacto contactoComprobar =
+                            new Contacto(nombreComprobar, apellidoComprobar);
 
-                        if (contacto.getNombre().equalsIgnoreCase(nombreComprobar)) {
-                            existe = true;
-                            break;
-                        }
-                    }
-
-                    if (existe) {
+                    if (agenda.existeContacto(contactoComprobar)) {
                         System.out.println("El contacto sí existe.");
                     } else {
                         System.out.println("El contacto no existe.");
@@ -109,16 +80,7 @@ public class Main {
                     System.out.println();
                     System.out.println("=== LISTA DE CONTACTOS ===");
 
-                    if (contactos.isEmpty()) {
-
-                        System.out.println("No hay contactos registrados.");
-
-                    } else {
-
-                        for (Contacto contacto : contactos) {
-                            System.out.println(contacto);
-                        }
-                    }
+                    agenda.listarContactos();
 
                     break;
 
@@ -129,25 +91,13 @@ public class Main {
                     System.out.print("Ingresa el nombre del contacto: ");
                     String nombreBuscar = scanner.nextLine();
 
-                    Contacto contactoEncontrado = null;
+                    System.out.print("Ingresa el apellido del contacto: ");
+                    String apellidoBuscar = scanner.nextLine();
 
-                    for (Contacto contacto : contactos) {
-
-                        if (contacto.getNombre().equalsIgnoreCase(nombreBuscar)) {
-                            contactoEncontrado = contacto;
-                            break;
-                        }
-                    }
-
-                    if (contactoEncontrado != null) {
-
-                        System.out.println("Contacto encontrado:");
-                        System.out.println(contactoEncontrado);
-
-                    } else {
-
-                        System.out.println("Contacto no encontrado.");
-                    }
+                    agenda.buscarContacto(
+                            nombreBuscar,
+                            apellidoBuscar
+                    );
 
                     break;
 
@@ -155,28 +105,16 @@ public class Main {
                     System.out.println();
                     System.out.println("=== ELIMINAR CONTACTO ===");
 
-                    System.out.print("Ingresa el nombre del contacto a eliminar: ");
+                    System.out.print("Ingresa el nombre del contacto: ");
                     String nombreEliminar = scanner.nextLine();
 
-                    Contacto contactoEliminar = null;
+                    System.out.print("Ingresa el apellido del contacto: ");
+                    String apellidoEliminar = scanner.nextLine();
 
-                    for (Contacto contacto : contactos) {
+                    Contacto contactoEliminar =
+                            new Contacto(nombreEliminar, apellidoEliminar);
 
-                        if (contacto.getNombre().equalsIgnoreCase(nombreEliminar)) {
-                            contactoEliminar = contacto;
-                            break;
-                        }
-                    }
-
-                    if (contactoEliminar != null) {
-
-                        contactos.remove(contactoEliminar);
-                        System.out.println("Contacto eliminado correctamente.");
-
-                    } else {
-
-                        System.out.println("El contacto no existe.");
-                    }
+                    agenda.eliminarContacto(contactoEliminar);
 
                     break;
 
@@ -184,12 +122,9 @@ public class Main {
                     System.out.println();
                     System.out.println("=== ESTADO DE LA AGENDA ===");
 
-                    if (contactos.size() >= capacidadMaxima) {
-
+                    if (agenda.agendaLlena()) {
                         System.out.println("La agenda está llena.");
-
                     } else {
-
                         System.out.println("La agenda todavía tiene espacio.");
                     }
 
@@ -199,17 +134,17 @@ public class Main {
                     System.out.println();
                     System.out.println("=== ESPACIOS LIBRES ===");
 
-                    int espaciosLibres = capacidadMaxima - contactos.size();
-
                     System.out.println(
-                            "Espacios disponibles: " + espaciosLibres
+                            "Espacios disponibles: " + agenda.espacioLibres()
                     );
 
                     break;
 
                 case 0:
                     System.out.println();
-                    System.out.println("¡Gracias por usar nuestra agenda telefónica!");
+                    System.out.println(
+                            "¡Gracias por usar nuestra agenda telefónica!"
+                    );
                     break;
 
                 default:

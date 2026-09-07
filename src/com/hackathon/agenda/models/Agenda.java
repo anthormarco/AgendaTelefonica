@@ -54,7 +54,7 @@ public class Agenda {
         contactos.sort(Comparator.comparing((Contacto contacto) -> contacto.getNombre().toLowerCase())
                 .thenComparing(contacto -> contacto.getApellido().toLowerCase()));
 
-        System.out.println("\n--- LISTA DE CONTACTOS ---");
+
         for (Contacto contacto : contactos) {
             System.out.println(contacto.getNombre() + " " +
                     contacto.getApellido() + " - " + contacto.getTelefono());
