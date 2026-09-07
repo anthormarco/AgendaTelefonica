@@ -2,15 +2,18 @@ package com.hackathon.agenda.models;
 import java.util.Objects;
 public class Contacto {
     private String nombre;
+    private String apellido;
     private String telefono;
 
-    public Contacto(String nombre, String telefono) {
+    public Contacto(String nombre, String apellido, String telefono) {
         this.nombre = nombre;
+        this.apellido = apellido;
         this.telefono = telefono;
     }
 
-    public Contacto(String nombre) {
+    public Contacto(String nombre, String apellido) {
         this.nombre = nombre;
+        this.apellido = apellido;
         this.telefono = "";
     }
 
@@ -20,6 +23,14 @@ public class Contacto {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getApellido(){
+        return apellido;
+    }
+
+    public void setApellido(String apellido){
+        this.apellido = apellido;
     }
 
     public String getTelefono() {
@@ -35,11 +46,11 @@ public class Contacto {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Contacto contacto = (Contacto) obj;
-        return nombre.equalsIgnoreCase(contacto.nombre);
+        return nombre.equalsIgnoreCase(contacto.nombre) && apellido.equalsIgnoreCase(contacto.apellido);
     }
 
     @Override
     public String toString() {
-        return "Nombre: " + nombre + " | Teléfono: " + telefono;
+        return "Nombre: " + nombre + "Apellido: " + apellido + " | Teléfono: " + telefono;
     }
 }
